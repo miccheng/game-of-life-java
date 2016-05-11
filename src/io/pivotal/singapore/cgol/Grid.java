@@ -4,8 +4,8 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class Grid {
-    private final int colCount;
-    private final int rowCount;
+    private int colCount;
+    private int rowCount;
     Set<Coordinate> liveSets = new HashSet<>();
 
     public Grid(int numRow, int numCols) {
@@ -27,15 +27,15 @@ public class Grid {
 
     public void setLiveCell(Coordinate c) {
         liveSets.add(c);
+
+        rowCount = Math.max(c.getRow() + 1, rowCount);
+        colCount = Math.max(c.getColumn() + 1, colCount);
     }
 
     public int countLiveNeighours(Coordinate c) {
         AtomicInteger count = new AtomicInteger(0);
-        int row = c.getRow();
-        int column = c.getColumn();
 
-        forEachCellFromTo(row - 1, column - 1, row + 1, column + 1, (alive, coord) -> {
-            if (coord.getRow() == row && coord.getColumn() == column) { return; }
+        forEachNeighbour(c, (alive, coord) -> {
             if (alive) count.incrementAndGet();
         });
 
@@ -44,23 +44,26 @@ public class Grid {
 
     public void forEachCell(CellConsumer consumer) {
         forEachCellFromTo(0, 0, rowCount - 1, colCount - 1, consumer);
+
     }
 
-    public List<Coordinate> getLiveCellCoordinates() {
-        List<Coordinate> liveCells = new ArrayList<>();
-        liveCells.addAll(liveSets);
-
-        return liveCells;
-    }
-
-    public List<Coordinate> getDeadCellCoordinates() {
-        final List<Coordinate> coords = new ArrayList<>();
-
-        forEachCell((alive, c) -> {
-            if (!alive) coords.add(c);
+    public void forEachCandidateCell(CellConsumer consumer) {
+        liveSets.forEach(c -> {
+            consumer.apply(true, c);
+            forEachNeighbour(c, (alive, coord) -> {
+                if (!alive) consumer.apply(false, coord);
+            });
         });
+    }
 
-        return coords;
+    private void forEachNeighbour(Coordinate c, CellConsumer consumer) {
+        int row = c.getRow();
+        int column = c.getColumn();
+
+        forEachCellFromTo(row - 1, column - 1, row + 1, column + 1, (alive, coord) -> {
+            if (coord.getRow() == row && coord.getColumn() == column) { return; }
+            consumer.apply(alive, coord);
+        });
     }
 
     private void forEachCellFromTo(int fromRow, int fromCol, int toRow, int toCol, CellConsumer consumer) {

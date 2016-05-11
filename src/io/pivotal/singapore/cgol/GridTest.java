@@ -45,29 +45,6 @@ public class GridTest {
         assertEquals(8, grid.countLiveNeighours(c(1, 1)));
     }
 
-    @Test
-    public void listsLiveCells() {
-        Grid grid = new Grid();
-        grid.setLiveCell(c(99, 10000));
-        grid.setLiveCell(c(100, 10001));
-
-        List<Coordinate> coordinates = grid.getLiveCellCoordinates();
-
-        assertTrue(coordinates.contains(c(99, 10000)));
-        assertTrue(coordinates.contains(c(100, 10001)));
-    }
-
-    @Test
-    public void listsDeadCells() {
-        Grid grid = new Grid(2, 2);
-
-        List<Coordinate> coords = grid.getDeadCellCoordinates();
-
-        List<Coordinate> expected = Arrays.asList(c(0, 0), c(0, 1), c(1, 0), c(1, 1));
-        assertEquals(expected, coords);
-    }
-
-    @Test
     public void iteratesOverCellsByRow() {
         Grid grid = new Grid(2, 2);
         final List<Coordinate> coords = new ArrayList<>();

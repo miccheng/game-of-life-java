@@ -23,6 +23,7 @@ public class Generation {
                 }
             }
         }
+        System.out.println("");
     }
 
     public Generation(Grid newGrid) {
@@ -44,7 +45,7 @@ public class Generation {
     public Generation tick() {
         final Grid newGrid = new Grid(grid.getRowCount(), grid.getColCount());
 
-        grid.forEachCell((alive, c) -> {
+        grid.forEachCandidateCell((alive, c) -> {
             int numNeighbours = grid.countLiveNeighours(c);
             if (Rules.apply(alive, numNeighbours)) {
                 newGrid.setLiveCell(c);
