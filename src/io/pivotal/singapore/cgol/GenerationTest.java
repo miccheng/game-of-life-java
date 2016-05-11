@@ -76,4 +76,36 @@ public class GenerationTest {
 
         assertEquals(expected, new Generation(seed).tick().toString());
     }
+
+    @Test
+    public void spaceship2ndGeneration() {
+        String seed = "#..#.\n" +
+                      "....#\n" +
+                      "#...#\n" +
+                      ".####";
+
+        String expected = "......\n" +
+                          "..####\n" +
+                          ".#...#\n" +
+                          ".....#\n" +
+                          ".#..#.";
+
+        assertEquals(expected, new Generation(seed).tick().tick().toString());
+    }
+
+    @Test
+    public void spaceship3rdGeneration() {
+        String seed = "#..#.\n" +
+                      "....#\n" +
+                      "#...#\n" +
+                      ".####";
+
+        String expected = "...##..\n" +
+                          "..####.\n" +
+                          "..##.##\n" +
+                          "....##.\n" +
+                          ".......";
+
+        assertEquals(expected, new Generation(seed).tick().tick().tick().toString());
+    }
 }
