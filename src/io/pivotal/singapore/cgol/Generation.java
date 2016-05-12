@@ -1,12 +1,11 @@
 package io.pivotal.singapore.cgol;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class Generation {
     private static final char ALIVE_CHAR = '#';
     private static final char DEAD_CHAR = '.';
+    private static final char ROW_DELIMITER = '\n';
     private Grid grid;
 
     public Generation(String seed) {
@@ -33,17 +32,22 @@ public class Generation {
     @Override
     public String toString() {
         StringBuffer returnString = new StringBuffer();
+        AtomicInteger columnCounter = new AtomicInteger();
 
         grid.forEachCell((alive, c) -> {
-            if (c.getRow() > 0 && c.getColumn() == 0) returnString.append("\n");
             returnString.append(alive ? ALIVE_CHAR : DEAD_CHAR);
+
+            if (columnCounter.incrementAndGet() == grid.getColumnWidth()) {
+                returnString.append(ROW_DELIMITER);
+                columnCounter.set(0);
+            }
         });
 
-        return returnString.toString();
+        return returnString.toString().trim();
     }
 
     public Generation tick() {
-        final Grid newGrid = new Grid(grid.getRowCount(), grid.getColCount());
+        final Grid newGrid = new Grid(grid.getRowCount(), grid.getColCount(), grid.getOriginRow(), grid.getOriginCol());
 
         grid.forEachCandidateCell((alive, c) -> {
             int numNeighbours = grid.countLiveNeighours(c);

@@ -108,4 +108,20 @@ public class GenerationTest {
 
         assertEquals(expected, new Generation(seed).tick().tick().tick().toString());
     }
+
+    @Test
+    public void reverseSpaceship() {
+        String seed = ".#..#\n" +
+                      "#....\n" +
+                      "#...#\n" +
+                      "####.";
+
+        String expected = "......\n" +
+                          ".##...\n" +
+                          "##.##.\n" +
+                          ".####.\n" +
+                          "..##..";
+
+        assertEquals(expected, new Generation(seed).tick().toString());
+    }
 }

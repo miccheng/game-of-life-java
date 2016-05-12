@@ -6,7 +6,17 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class Grid {
     private int colCount;
     private int rowCount;
+    private int originCol = 0;
+    private int originRow = 0;
+
     Set<Coordinate> liveSets = new HashSet<>();
+
+    public Grid(int numRow, int numCols, int originRow, int originCol) {
+        this.rowCount = numRow;
+        this.colCount = numCols;
+        this.originRow = originRow;
+        this.originCol = originCol;
+    }
 
     public Grid(int numRow, int numCols) {
         rowCount = numRow;
@@ -25,11 +35,22 @@ public class Grid {
         return rowCount;
     }
 
+    public int getOriginCol() {
+        return originCol;
+    }
+
+    public int getOriginRow() {
+        return originRow;
+    }
+
+    public int getColumnWidth() {
+        return colCount - originCol;
+    }
+
     public void setLiveCell(Coordinate c) {
         liveSets.add(c);
 
-        rowCount = Math.max(c.getRow() + 1, rowCount);
-        colCount = Math.max(c.getColumn() + 1, colCount);
+        resizeGridFromCoordinate(c);
     }
 
     public int countLiveNeighours(Coordinate c) {
@@ -43,8 +64,7 @@ public class Grid {
     }
 
     public void forEachCell(CellConsumer consumer) {
-        forEachCellFromTo(0, 0, rowCount - 1, colCount - 1, consumer);
-
+        forEachCellFromTo(originRow, originCol, rowCount - 1, colCount - 1, consumer);
     }
 
     public void forEachCandidateCell(CellConsumer consumer) {
@@ -78,5 +98,12 @@ public class Grid {
         return liveSets.contains(new Coordinate(row, column));
     }
 
+    private void resizeGridFromCoordinate(Coordinate c) {
+        if (c.getRow() < originRow) originRow = c.getRow();
+        if (c.getColumn() < originCol) originCol = c.getColumn();
+
+        rowCount = Math.max(c.getRow() + 1, rowCount);
+        colCount = Math.max(c.getColumn() + 1, colCount);
+    }
 }
 

@@ -1,7 +1,5 @@
 package io.pivotal.singapore.cgol;
 
-import java.util.List;
-
 public class Rules {
     private Rules() {}
 
