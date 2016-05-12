@@ -3,13 +3,20 @@ package io.pivotal.singapore.cgol;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class Generation {
-    private static final char ALIVE_CHAR = '#';
-    private static final char DEAD_CHAR = '.';
-    private static final char ROW_DELIMITER = '\n';
+    private static final char ALIVE_CHAR;
+    private static final char DEAD_CHAR;
+    private static final String ROW_DELIMITER;
+
+    static {
+        ROW_DELIMITER = "\n";
+        DEAD_CHAR = '.';
+        ALIVE_CHAR = '#';
+    }
+
     private Grid grid;
 
     public Generation(String seed) {
-        String[] rows = seed.split("\\n");
+        String[] rows = seed.split(ROW_DELIMITER);
 
         grid = new Grid(rows.length, rows[0].length());
 
